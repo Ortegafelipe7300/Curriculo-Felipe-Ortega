@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Currículo - Felipe Ortega</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Biblioteca para geração do PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    
+    <style>
+        /* TEMA CLARO */
+        :root[data-theme="light"] {
+            --bg: #FAFAFC;
+            --surface: rgba(255, 255, 255, 0.55);
+            --surface-hover: rgba(255, 255, 255, 0.72);
+            --surface-active: rgba(225, 228, 236, 0.72);
+            --text-primary: #151820;
+            --text-secondary: #687080;
+            --text-muted: #969DAB;
+            --border: rgba(30, 40, 60, 0.08);
+            --border-hover: rgba(255, 255, 255, 0.65);
+            --shadow: 0 8px 30px rgba(30, 40, 70, 0.06);
+            --shadow-hover: 0 12px 40px rgba(30, 40, 70, 0.08);
+            --shadow-inner: inset 0 1px 0 rgba(255, 255, 255, 0.75);
+            --shadow-active: inset 0 1px 4px rgba(20, 30, 50, 0.08);
+            --accent-gradient: linear-gradient(110deg, #39C5F0, #4285F4, #7C4DFF, #D946EF);
+        }
+
+        /* TEMA ESCURO (Agora é o padrão) */
+        :root[data-theme="dark"] {
+            --bg: #08090D;
+            --surface: rgba(255, 255, 255, 0.07);
+            --surface-hover: rgba(255, 255, 255, 0.12);
+            --surface-active: rgba(255, 255, 255, 0.04);
+            --text-primary: #F5F6FA;
+            --text-secondary: #A9AFBD;
+            --text-muted: #737988;
+            --border: rgba(255, 255, 255, 0.10);
+            --border-hover: rgba(255, 255, 255, 0.20);
+            --shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+            --shadow-hover: 0 12px 40px rgba(0, 0, 0, 0.5);
+            --shadow-inner: inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            --shadow-active: inset 0 1px 4px rgba(0, 0, 0, 0.4);
+            --accent-gradient: linear-gradient(110deg, #39C5F0, #4285F4, #7C4DFF, #D946EF);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 120px;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Orbes Atmosféricos */
+        .ambient-orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(80px);
+            z-index: -1;
+            opacity: 0.15;
+            pointer-events: none;
+        }
+
+        .orb-1 {
+            top: -10%;
+            right: -5%;
+            width: 40vw;
+            height: 40vw;
+            background: linear-gradient(135deg, #4285F4, #7C4DFF);
+        }
+
+        .orb-2 {
+            bottom: -10%;
+            left: -10%;
+            width: 50vw;
+            height: 50vw;
+            background: linear-gradient(135deg, #39C5F0, #F472B6);
+            opacity: 0.1;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Superfície de Vidro (Glass) */
+        .glass-panel {
+            background: var(--surface);
+            backdrop-filter: blur(18px) saturate(120%);
+            -webkit-backdrop-filter: blur(18px) saturate(120%);
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow), var(--shadow-inner);
+            border-radius: 24px;
+            padding: 40px;
+            margin-bottom: 40px;
+        }
+
+        /* Tipografia */
+        h1 {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin-bottom: 8px;
+            background: var(--text-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 24px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-bottom: 24px;
+        }
+
+        p {
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+        }
+
+        .meta {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+            font-weight: 500;
+        }
+
+        /* Navegação em Pílulas */
+        nav {
+            position: sticky;
+            top: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            justify-content: center;
+            margin-bottom: 40px;
+            z-index: 100;
+        }
+
+        .nav-pill {
+            display: inline-flex;
+            align-items: center;
+            padding: 10px 20px;
+            background: var(--surface);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            color: var(--text-primary);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03), inset 0 1px 0 rgba(255,255,255,0.4);
+            transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .nav-pill:hover {
+            background: var(--surface-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.6);
+            color: var(--text-primary);
+        }
+
+        .nav-pill:active {
+            background: var(--surface-active);
+            transform: scale(0.97);
+            box-shadow: inset 0 1px 4px rgba(0,0,0,0.08);
+        }
+
+        /* Botões de Ação */
+        .actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 24px;
+        }
+
+        .action-btn {
+            display: inline-flex;
+            align-items: center;
+            padding: 12px 24px;
+            border-radius: 999px;
+            font-weight: 500;
+            font-size: 0.95rem;
+            text-decoration: none;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s ease;
+        }
+
+        .btn-glass {
+            background: var(--surface);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03), inset 0 1px 0 rgba(255,255,255,0.4);
+        }
+
+        .btn-glass:hover {
+            background: var(--surface-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.6);
+        }
+
+        .btn-glass:active {
+            background: var(--surface-active);
+            transform: scale(0.97);
+            box-shadow: inset 0 1px 4px rgba(0,0,0,0.08);
+        }
+
+        .btn-accent {
+            position: relative;
+            background: var(--surface);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: var(--text-primary);
+            overflow: hidden;
+            z-index: 1;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05), inset 0 1px 0 rgba(255,255,255,0.4);
+        }
+
+        .btn-accent::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: var(--accent-gradient);
+            opacity: 0.15;
+            z-index: -1;
+            transition: opacity 0.3s ease;
+        }
+
+        .btn-accent:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(66,133,244,0.15), inset 0 1px 0 rgba(255,255,255,0.6);
+        }
+
+        .btn-accent:hover::before {
+            opacity: 0.25;
+        }
+
+        /* Contatos */
+        .contact-list {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .contact-item a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.2s ease;
+            position: relative;
+        }
+
+        .contact-item a::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background: var(--accent-gradient);
+            transform: scaleX(0);
+            transform-origin: right;
+            transition: transform 0.3s ease;
+        }
+
+        .contact-item a:hover {
+            color: var(--text-primary);
+        }
+
+        .contact-item a:hover::after {
+            transform: scaleX(1);
+            transform-origin: left;
+        }
+
+        /* Experiências e Formação */
+        .experience-item {
+            margin-bottom: 32px;
+            position: relative;
+        }
+
+        .experience-item:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Mecânica Expandir/Reduzir */
+        .details {
+            max-height: 0;
+            overflow: hidden;
+            opacity: 0;
+            transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease, margin-top 0.3s ease;
+        }
+
+        .details.open {
+            max-height: 1000px;
+            opacity: 1;
+            margin-top: 16px;
+        }
+
+        .toggle-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 4px 0;
+            transition: color 0.2s ease;
+            font-family: inherit;
+        }
+
+        .toggle-btn:hover {
+            color: var(--text-primary);
+        }
+
+        .toggle-icon {
+            display: inline-block;
+            transition: transform 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        /* Tags */
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .tag {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            padding: 4px 12px;
+            border-radius: 999px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+
+        /* =========================================
+           ESTILOS OTIMIZADOS EXCLUSIVOS PARA O PDF
+           ========================================= */
+        .pdf-mode {
+            background-color: #FFFFFF !important;
+            color: #000000 !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            max-width: 100% !important;
+        }
+
+        .pdf-mode * {
+            color: #000000 !important;
+            text-shadow: none !important;
+            -webkit-text-fill-color: #000000 !important;
+        }
+
+        .pdf-mode .ambient-orb, 
+        .pdf-mode nav, 
+        .pdf-mode .actions,
+        .pdf-mode .toggle-btn {
+            display: none !important; /* Esconde interface durante a impressão */
+        }
+
+        .pdf-mode .glass-panel {
+            background: none !important;
+            border: none !important;
+            box-shadow: none !important;
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+            padding: 5px 20px !important; /* Remove as margens internas pesadas */
+            margin-bottom: 20px !important;
+        }
+
+        .pdf-mode header.glass-panel {
+            padding-top: 0 !important; /* Aproxima o título do topo do documento */
+            margin-bottom: 10px !important;
+        }
+
+        .pdf-mode .experience-item {
+            page-break-inside: avoid; /* Evita que o texto quebre no meio de uma página */
+            margin-bottom: 20px !important;
+        }
+
+        .pdf-mode .details {
+            margin-top: 8px !important;
+            padding-left: 0 !important;
+        }
+
+        .pdf-mode h1 {
+            font-size: 2.2rem !important;
+            margin-bottom: 5px !important;
+        }
+
+        .pdf-mode h2 {
+            font-size: 1.2rem !important;
+            margin-bottom: 10px !important;
+            padding-bottom: 5px !important;
+            border-bottom: 1px solid #cccccc !important;
+        }
+
+        .pdf-mode .tag {
+            border: 1px solid #bbbbbb !important;
+            color: #000 !important;
+            background: #f4f4f4 !important;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="ambient-orb orb-1"></div>
+    <div class="ambient-orb orb-2"></div>
+
+    <nav id="top-nav">
+        <a href="#resumo" class="nav-pill">Resumo</a>
+        <a href="#experiencia" class="nav-pill">Experiência</a>
+        <a href="#formacao" class="nav-pill">Formação</a>
+        <a href="#competencias" class="nav-pill">Competências</a>
+    </nav>
+
+    <div class="container" id="resume-content">
+        
+        <!-- HEADER -->
+        <header class="glass-panel">
+            <h1>Felipe Ortega</h1>
+            <p class="subtitle">Assistente de Marketing Digital | Automação e CRM</p>
+            
+            <ul class="contact-list">
+                <li class="contact-item">Londrina, PR</li>
+                <li class="contact-item">ortegafelipe7300@gmail.com</li>
+                <li class="contact-item"><a href="https://linkedin.com/in/felipe-ortega-bb231b211/" target="_blank">LinkedIn</a></li>
+            </ul>
+
+            <div class="actions">
+                <a href="https://wa.me/5543999917111" target="_blank" class="action-btn btn-accent">WhatsApp</a>
+                <button class="action-btn btn-glass" id="theme-toggle">Alterar Tema</button>
+                <button class="action-btn btn-glass" onclick="generatePDF()">Salvar PDF</button>
+            </div>
+        </header>
+
+        <!-- RESUMO -->
+        <section id="resumo" class="glass-panel">
+            <h2>Resumo Profissional</h2>
+            <p>Relações Públicas e Mestre em Comunicação, com raciocínio lógico apurado, atenção a detalhes e satisfação em trabalhar com processos bem definidos. Movido pelo propósito de servir ao próximo e transformar realidades, busco aplicar minha organização e capacidade de análise de dados na operação diária de marketing.</p>
+            <p>Tenho conhecimento prático e teórico em ferramentas de automação de marketing e CRM (com base para rápida adaptação ao Infobip e ActiveCampaign), além de facilidade com ferramentas digitais, tratamento básico de dados em planilhas (Excel/Google Sheets) e execução de cronogramas de disparos segmentados (WhatsApp e e-mail).</p>
+            <p>Fora do ambiente técnico, sou um grande entusiasta do universo automotivo, com forte interesse em mecânica e customização de motocicletas, o que me conecta de forma genuína ao conteúdo, aos produtos e ao público da Retornar.</p>
+        </section>
+
+        <!-- EXPERIÊNCIA -->
+        <section id="experiencia" class="glass-panel">
+            <h2>Experiência Profissional</h2>
+
+            <div class="experience-item">
+                <h3>SIEP & Procon Londrina</h3>
+                <div class="meta">Estagiário de Comunicação e CRM | 2021 – 2022</div>
+                
+                <button class="toggle-btn" onclick="toggleDetails('exp1', this)">
+                    <span class="btn-text">Ver detalhes</span>
+                    <!-- SETAS GEOMÉTRICAS EM CONTORNO -->
+                    <span class="toggle-icon">&#x25BD;</span> 
+                </button>
+                
+                <div class="details" id="exp1">
+                    <p><strong>Gestão de CRM e Automação:</strong> Experiência prática na operação e gestão diária de plataformas de CRM e canais de relacionamento.</p>
+                    <p><strong>Disparos e Testes:</strong> Atuação direta para organizar e executar o cronograma de disparos de campanhas e comunicados. Responsável por realizar a revisão de disparos teste, validando mensagens, links e variáveis antes do envio para a base.</p>
+                    <p><strong>Organização de Listas:</strong> Realização de tratamento básico de dados em planilhas (Excel / Google Sheets), aplicando filtros, limpeza e organização de listas para garantir a eficiência dos disparos segmentados.</p>
+                </div>
+            </div>
+
+            <div class="experience-item">
+                <h3>Faculdade ENOVA</h3>
+                <div class="meta">Professor Universitário EAD (Marketing e Negócios) | 2026</div>
+                
+                <button class="toggle-btn" onclick="toggleDetails('exp2', this)">
+                    <span class="btn-text">Ver detalhes</span>
+                    <span class="toggle-icon">&#x25BD;</span>
+                </button>
+                
+                <div class="details" id="exp2">
+                    <p><strong>Conhecimento Teórico e Ferramentas:</strong> Aprofundamento no conhecimento teórico e prático sobre ecossistemas de CRM, funil de vendas e ferramentas de automação de marketing, traduzindo o funcionamento lógico dessas plataformas para os alunos.</p>
+                    <p><strong>Métricas e Performance:</strong> Rotina constante focada em acompanhar métricas de entrega, resposta e performance dos alunos no ambiente digital, aplicando forte raciocínio lógico e análise de dados para intervenções de melhoria.</p>
+                </div>
+            </div>
+
+            <div class="experience-item">
+                <h3>ZMP Inteligência</h3>
+                <div class="meta">Assistente de Projetos e Operações | 2025 – 2026</div>
+                
+                <button class="toggle-btn" onclick="toggleDetails('exp3', this)">
+                    <span class="btn-text">Ver detalhes</span>
+                    <span class="toggle-icon">&#x25BD;</span>
+                </button>
+                
+                <div class="details" id="exp3">
+                    <p><strong>Processos Bem Definidos:</strong> Satisfação e alta disciplina em executar rotinas operacionais dentro de fluxos automatizados, mantendo o controle rigoroso de tarefas diárias em plataformas de gestão (ClickUp).</p>
+                    <p><strong>Controle de Campanhas e Custos:</strong> Responsável por atualizar planilhas de controle, organizar orçamentos corporativos e lançar custos operacionais para o acompanhamento das ações e eventos da área.</p>
+                    <p><strong>Oportunidades de Melhoria:</strong> Monitoramento contínuo dos processos internos, atuando de forma proativa para identificar e reportar falhas ou oportunidades de melhoria em fluxos de trabalho da equipe.</p>
+                </div>
+            </div>
+
+            <div class="experience-item">
+                <h3>Atmosfera Eventos</h3>
+                <div class="meta">Produtor de Projetos Corporativos Jr. | 2023 – 2025</div>
+                
+                <button class="toggle-btn" onclick="toggleDetails('exp4', this)">
+                    <span class="btn-text">Ver detalhes</span>
+                    <span class="toggle-icon">&#x25BD;</span>
+                </button>
+                
+                <div class="details" id="exp4">
+                    <p><strong>Organização e Atenção a Detalhes:</strong> Atuação orientada por checklists e execução tática de alto nível. Acompanhamento rigoroso de prazos e orçamentos, exigindo raciocínio lógico rápido para a resolução de demandas diárias com fornecedores e clientes.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- FORMAÇÃO -->
+        <section id="formacao" class="glass-panel">
+            <h2>Formação Acadêmica</h2>
+            
+            <div class="experience-item">
+                <h3>Mestrado em Comunicação</h3>
+                <div class="meta">Universidade Estadual de Londrina (UEL) | 2023 a 2026</div>
+                <p>Pesquisa focada em plataformas digitais e analise de dados, mérito reconhecido através de bolsa de estudos CAPES.</p>
+            </div>
+
+            <div class="experience-item">
+                <h3>Comunicação Social (Relações Públicas)</h3>
+                <div class="meta">Universidade Estadual de Londrina (UEL) | 2019 a 2024</div>
+            </div>
+        </section>
+
+        <!-- COMPETÊNCIAS -->
+        <section id="competencias" class="glass-panel">
+            <h2>Competências e Ferramentas</h2>
+            
+            <p><strong>Automação e CRM:</strong> Conhecimento em gestão de plataformas de CRM e Automação de Marketing.</p>
+            <p><strong>Operação de Campanhas:</strong> Cronograma de disparos, disparos segmentados (WhatsApp/E-mail), revisão de disparos teste (variáveis e links).</p>
+            <p><strong>Análise de Dados:</strong> Tratamento básico de dados, filtros e limpeza de listas, Excel, Google Sheets, acompanhamento de métricas de entrega e resposta.</p>
+            <p><strong>Perfil Comportamental:</strong> Processos bem definidos, organização, atenção a detalhes, raciocínio lógico, curiosidade digital.</p>
+            
+            <div class="tags">
+                <span class="tag">CRM</span>
+                <span class="tag">Automação</span>
+                <span class="tag">WhatsApp</span>
+                <span class="tag">E-mail Marketing</span>
+                <span class="tag">Excel</span>
+                <span class="tag">Google Sheets</span>
+                <span class="tag">ClickUp</span>
+            </div>
+        </section>
+
+    </div>
+
+    <script>
+        // Lógica de Alternância de Tema (Começa escuro por padrão)
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const htmlElement = document.documentElement;
+
+        themeToggleBtn.addEventListener('click', () => {
+            const currentTheme = htmlElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            htmlElement.setAttribute('data-theme', newTheme);
+        });
+
+        // Lógica de Expandir/Recolher com troca de Setas de Contorno
+        function toggleDetails(id, btn) {
+            const details = document.getElementById(id);
+            const btnText = btn.querySelector('.btn-text');
+            const icon = btn.querySelector('.toggle-icon');
+            const isClosed = details.style.maxHeight === '0px' || details.style.maxHeight === '';
+
+            if (isClosed) {
+                details.classList.add('open');
+                btn.classList.add('active');
+                btnText.textContent = 'Ocultar detalhes';
+                icon.innerHTML = '&#x25B3;'; // Seta para cima (△)
+            } else {
+                details.classList.remove('open');
+                btn.classList.remove('active');
+                btnText.textContent = 'Ver detalhes';
+                icon.innerHTML = '&#x25BD;'; // Seta para baixo (▽)
+            }
+        }
+
+        // Geração Otimizada de PDF Documental
+        function generatePDF() {
+            const element = document.getElementById('resume-content');
+            
+            // 1. Prepara as classes e variáveis para forçar o layout ideal de PDF (Branco/Preto e compacto)
+            element.classList.add('pdf-mode');
+            
+            // 2. Abre todos os blocos de texto para que não saiam escondidos no documento
+            const detailsElements = document.querySelectorAll('.details');
+            detailsElements.forEach(el => {
+                el.style.maxHeight = 'none'; // Previne que animações de CSS ocultem o texto
+                el.classList.add('open');
+            });
+
+            // 3. Configuração das réguas e margens do PDF gerado
+            const opt = {
+                margin:       [10, 10, 10, 10], // Margem reduzida no topo e nas laterais (10mm)
+                filename:     'Felipe_Ortega_Curriculo.pdf',
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2, useCORS: true, backgroundColor: '#FFFFFF' }, // Força render fundo branco
+                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+
+            // 4. Delay sutil para garantir que a renderização do layout limpo foi aplicada na tela antes do print
+            setTimeout(() => {
+                html2pdf().set(opt).from(element).save().then(() => {
+                    
+                    // 5. Restaura o layout interativo (Glassmorphism Dark) após baixar
+                    element.classList.remove('pdf-mode');
+                    
+                    detailsElements.forEach(el => {
+                        el.style.maxHeight = ''; 
+                        el.classList.remove('open');
+                    });
+                    
+                    const toggleBtns = document.querySelectorAll('.toggle-btn');
+                    toggleBtns.forEach(btn => {
+                        btn.classList.remove('active');
+                        btn.querySelector('.btn-text').textContent = 'Ver detalhes';
+                        btn.querySelector('.toggle-icon').innerHTML = '&#x25BD;';
+                    });
+                });
+            }, 300);
+        }
+    </script>
+</body>
+</html>
